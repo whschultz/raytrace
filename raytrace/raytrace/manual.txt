@@ -1,0 +1,23 @@
+Manual for RayTrace program
+
+The program is compiled with a scene ready to render.  To open an alternate file, use the File menu and select
+"Open."  Though editing has been implemented, saving has not.  :(
+
+To render your image, use the camera menu and select "Draw Screen."  For pre-final images, first select "Set
+pixel resolution..." and choose a value higher than 1 (unless you are running on an incredibly fast machine or
+don't mind waiting.  This sets the size of a ray in pixels.  If you enter a value of 3, each ray will take up
+a space on the screen of 3x3 pixels.  Though this vastly degrades the quality of the images, it can likewise
+improve the rendering time.
+
+Use the world coordinate settings for the camera if you know exactly what point you would like to see.  Use
+the camera coordinate settings for moving the camera if you just want to move around and see what everything
+looks like.    In world coordinates, you start at location (0,0,15) and are looking back down the z axis
+towards the origin.  Camera coordinates are:  horizontal to the right is x+, vertical in the upward direction
+is y+, perpendicular to the screen away from viewer is z+.  Use these axes to reposition the camera and turn
+the camera.
+
+The light attenuation value will increase or decrease the general brightness of the screen.  This could be
+considered ambient lighting, but is done differently.  This value is taken into account when the program
+calculates how much to decrease the lighting based on distance to the light.  The light attenuation value
+multiplies the result of this calculation.  Use higher values when you use large world coordinates.  Use
+smaller values when you use smaller world coordinates.  The value defaults to 8.
