@@ -1,4 +1,4 @@
-package sample;
+package raytrace.gui;
 
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -63,6 +63,11 @@ public class Controller {
 
         chooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Raytrace Data File", ".dat"));
         File selected = chooser.showOpenDialog(topPane.getScene().getWindow());
+
+        if (selected != null && selected.exists() && selected.isFile())
+        {
+
+        }
     }
 
     @FXML private void OnRender(ActionEvent event)

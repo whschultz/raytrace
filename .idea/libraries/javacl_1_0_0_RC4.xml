@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="javacl-1.0.0-RC4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/javacl-1.0.0-RC4-shaded.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javacl-1.0.0-RC4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
