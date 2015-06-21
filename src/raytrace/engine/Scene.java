@@ -28,12 +28,19 @@ public class Scene
 
     public boolean addLight(LightSource light)
     {
-        return false;
+        boolean output = !lights.contains(light);
+
+        if (output)
+        {
+            lights.add(light);
+        }
+
+        return output;
     }
 
     public void setBackground(double r, double g, double b)
     {
-
+        background = new Color(r,g,b);
     }
 
     public void deleteAllObjects()
@@ -228,7 +235,7 @@ public class Scene
                     s.specular = vals[6];
                     s.phong = phong;
 
-                    surfaces.set(i, s);
+                    surfaces.add(s);
                 }
 
                 int numObjects = Integer.parseInt(scanner.next());
@@ -236,6 +243,11 @@ public class Scene
                 for(int i = 0; i < numObjects; i++)
                 {
                     String line = scanner.nextLine();
+
+                    while ("".equals(line))
+                    {
+                        line = scanner.nextLine();
+                    }
 
                     Scanner lineScanner = new Scanner(line);
 
@@ -265,7 +277,7 @@ public class Scene
 
                     int surfaceId = Integer.parseInt(lineScanner.next());
 
-                    Surface s = surfaces.get(surfaceId);
+                    Surface s = surfaces.get(surfaceId - 1);
 
                     object.setColor(new Color(s.r,s.g,s.b));
                     object.setAmbient(s.ambient);
@@ -275,6 +287,10 @@ public class Scene
                 }
 
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            catch(Exception e)
+            {
                 e.printStackTrace();
             }
         }
