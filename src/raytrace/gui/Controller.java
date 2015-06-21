@@ -9,10 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import raytrace.engine.Camera;
-import raytrace.engine.Color;
-import raytrace.engine.Scene;
-import raytrace.engine.laVector;
+import raytrace.engine.*;
 
 import java.io.File;
 
