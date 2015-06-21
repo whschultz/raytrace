@@ -125,7 +125,7 @@ public class Controller {
 
                 Color color = scene.followRay(position, currentDir);
 
-                context.setFill(javafx.scene.paint.Color.color(color.red, color.green, color.blue));
+                context.setFill(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
                 context.fillRect(x, y, 1, 1);
             }
         }

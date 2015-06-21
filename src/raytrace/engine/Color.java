@@ -5,11 +5,11 @@ package raytrace.engine;
  */
 public class Color
 {
-    public final double red;
+    private final double red;
 
-    public final double green;
+    private final double green;
 
-    public final double blue;
+    private final double blue;
 
     public Color(double r, double g, double b)
     {
@@ -26,5 +26,20 @@ public class Color
     public Color add(Color val)
     {
         return new Color(red + val.red, green + val.green, blue + val.blue);
+    }
+
+    public double getRed()
+    {
+        return Math.max(Math.min(red,1), 0);
+    }
+
+    public double getGreen()
+    {
+        return Math.max(Math.min(green, 1), 0);
+    }
+
+    public double getBlue()
+    {
+        return Math.max(Math.min(blue, 1), 0);
     }
 }
