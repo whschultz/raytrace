@@ -149,16 +149,19 @@ public class Controller {
             sparelight.setRadius( .3 );
             scene.addLight(sparelight);
 
+            sparelight = new LightSource();
             sparelight.setColor(new Color(0, 0, 255));
             sparelight.setPosition(new laVector( 32, 16, 32 ));
             sparelight.setRadius( .3 );
             scene.addLight(sparelight);
 
+            sparelight = new LightSource();
             sparelight.setColor(new Color(0, 255, 0));
             sparelight.setPosition(new laVector( -32, 16, -32 ));
             sparelight.setRadius( .3 );
             scene.addLight(sparelight);
 
+            sparelight = new LightSource();
             sparelight.setColor(new Color(128, 128, 0));
             sparelight.setPosition(new laVector( 32, 16,-32 ));
             sparelight.setRadius( .3 );

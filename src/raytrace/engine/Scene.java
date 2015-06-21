@@ -23,7 +23,14 @@ public class Scene
 
     public boolean addObject(RaytraceObject object)
     {
-        return false;
+        boolean output = !objects.contains(object);
+
+        if (output)
+        {
+            objects.add(object);
+        }
+
+        return output;
     }
 
     public boolean addLight(LightSource light)
