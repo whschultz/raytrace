@@ -44,6 +44,17 @@ public class Controller {
         txtAntialiasing.textProperty().addListener((observable, oldValue, newValue) -> {
             OnAntialiasingChanged(observable, oldValue, newValue);
         });
+
+        cnvsRender.setWidth(1280);
+        cnvsRender.setHeight(800);
+
+        txtWidth.setText("1280");
+        txtHeight.setText("800");
+        txtAntialiasing.setText("1");
+
+        camera.setWidth((int) cnvsRender.getWidth());
+        camera.setHeight((int) cnvsRender.getHeight());
+        camera.setAntialiasResolution(1);
     }
 
     private void OnAntialiasingChanged(ObservableValue<? extends String> observable, String oldValue, String newValue)
