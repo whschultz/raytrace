@@ -25,7 +25,7 @@ public class Camera
     {
         lookat = new laVector(0, 0, -1).unit();
         head = new laVector(0, 1, 0);
-        position = new laVector(0, 0, 5);
+        position = new laVector(0, 0, 1.5);
         cameraResolution = 1;
         setAxes();
         zoom = 1;
