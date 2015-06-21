@@ -23,9 +23,9 @@ public class Camera
 
     public Camera()
     {
-        lookat = new laVector(0, -1, -1).unit();
+        lookat = new laVector(0, 0, -1).unit();
         head = new laVector(0, 1, 0);
-        position = new laVector(0, 10, 10);
+        position = new laVector(0, 0, 5);
         cameraResolution = 1;
         setAxes();
         zoom = 1;
@@ -139,7 +139,7 @@ public class Camera
         laVector topLeft = getTopLeft();
         laVector bottomLeft = getBottomLeft();
 
-        laVector dY = topLeft.subtract(bottomLeft).multiply(1d/((double)this.height));
+        laVector dY = bottomLeft.subtract(topLeft).multiply(1d/((double)this.height));
 
         return dY;
     }

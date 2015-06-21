@@ -102,9 +102,9 @@ public class Controller {
     @FXML private void OnRender(ActionEvent event)
     {
         laVector topLeft = camera.getTopLeft();
-        laVector topRight = camera.getTopRight();
-        laVector bottomLeft = camera.getBottomLeft();
-        laVector bottomRight = camera.getBottomRight();
+//        laVector topRight = camera.getTopRight();
+//        laVector bottomLeft = camera.getBottomLeft();
+//        laVector bottomRight = camera.getBottomRight();
         laVector position = camera.getPosition();
 
         laVector dX = camera.getDx();
@@ -112,7 +112,7 @@ public class Controller {
 
         GraphicsContext context = cnvsRender.getGraphicsContext2D();
 
-        final boolean antialias = camera.getAntialiasResolution() > 1;
+//        final boolean antialias = camera.getAntialiasResolution() > 1;
 
         for(int x = 0; x < camera.getWidth(); x++)
         {
@@ -121,7 +121,7 @@ public class Controller {
             for(int y = 0; y < camera.getHeight(); y++)
             {
                 laVector currentXY = currentTop.add(dY.multiply(y));
-                laVector currentDir = currentXY.subtract(position).unit();
+                laVector currentDir = currentXY.unit();
 
                 Color color = scene.followRay(position, currentDir);
 

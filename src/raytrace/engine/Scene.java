@@ -284,6 +284,8 @@ public class Scene
                     object.setDiffuse(s.diffuse);
                     object.setSpecular(s.specular);
                     object.setPhong(s.phong);
+
+                    objects.add(object);
                 }
 
             } catch (FileNotFoundException e) {
