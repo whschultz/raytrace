@@ -53,7 +53,7 @@ public class Controller {
         camera.setHeight((int) cnvsRender.getHeight());
         camera.setAntialiasResolution(1);
 
-//        setDefaultScene();
+        setDefaultScene();
     }
 
     private void setDefaultScene()
