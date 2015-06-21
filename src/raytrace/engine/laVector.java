@@ -106,4 +106,9 @@ public class laVector
 
         return new laVector(x_coor / length, y_coor / length, z_coor / length);
     }
+
+    public laVector reflect(laVector norm)
+    {
+        return this.add(norm.multiply(this.dot(norm)).multiply(-2));
+    }
 }
