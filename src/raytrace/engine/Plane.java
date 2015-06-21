@@ -6,12 +6,16 @@ package raytrace.engine;
 public class Plane extends RaytraceObject
 {
     laVector normal;
-    laVector point;
 
     public Plane()
     {
         normal = new laVector(0, 0, 1);
-        point = new laVector(0,0,1);
+        center = new laVector(0,0,1);
+    }
+
+    public void setNormal(laVector normal)
+    {
+        this.normal = normal;
     }
 
     public double intersect(laVector start, laVector dir)
@@ -21,7 +25,7 @@ public class Plane extends RaytraceObject
         if (dot == 0)
             return -1;
 
-        final double intersect = (point.dot(normal) - start.dot(normal)) / dir.dot(normal);
+        final double intersect = (center.dot(normal) - start.dot(normal)) / dir.dot(normal);
 
         return intersect;
     }
