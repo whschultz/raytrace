@@ -207,6 +207,7 @@ public class Controller {
 
         if (selected != null && selected.exists() && selected.isFile())
         {
+            scene.deleteAllObjects();
             scene.openFile(selected);
         }
     }
@@ -237,7 +238,7 @@ public class Controller {
 
                 Color color = scene.followRay(position, currentDir);
 
-                context.setFill(javafx.scene.paint.Color.color(color.red, color.green, color.blue));
+                context.setFill(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
                 context.fillRect(x, y, 1, 1);
             }
         }

@@ -7,8 +7,8 @@ public class LightSource
 {
     laVector position;
     Color color;
-    double attenuation;
-    double radius;
+    double attenuation = 1;
+    double radius = 0;
 
 
     public LightSource()

@@ -36,9 +36,7 @@ public class Camera
     {
         laVector antialiasing = new laVector(0,0,0);
         laVector antialiasingReminder = new laVector(0,0,0);
-        double r = 0;
-        double g = 0;
-        double b = 0;
+        Color sum = new Color(0,0,0);
         double count = 0;
 
         for(int antiX = 0; antiX < res; antiX++)
@@ -47,15 +45,13 @@ public class Camera
             {
                 Color color = objects.followRay(position, direction.add(antialiasing));
 
-                r += color.red;
-                g += color.green;
-                b += color.blue;
+                sum = sum.add(color);
 
                 count += 1;
             }
         }
 
-        return new Color(r/count, g/count, b/count);
+        return sum.multiply(1d/count);
     }
 
     public void setObjects(Scene scene)
