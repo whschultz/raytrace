@@ -95,6 +95,7 @@ public class Controller {
 
         if (selected != null && selected.exists() && selected.isFile())
         {
+            scene.deleteAllObjects();
             scene.openFile(selected);
         }
     }

@@ -45,7 +45,8 @@ public class Scene
 
     public void deleteAllObjects()
     {
-
+        lights.clear();
+        objects.clear();
     }
 
     public void setAttenuation(double atten)
