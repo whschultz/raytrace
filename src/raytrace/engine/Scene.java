@@ -173,10 +173,8 @@ public class Scene
 
     }
 
-    public void openFile(String path)
+    public void openFile(File file)
     {
-        File file = new File(path);
-
         if (file.exists())
         {
             try (Scanner scanner = new Scanner(file, StandardCharsets.UTF_8.name())) {

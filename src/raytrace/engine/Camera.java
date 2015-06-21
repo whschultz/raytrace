@@ -17,6 +17,9 @@ public class Camera
     int cameraResolution;
     double zoom;
 
+    int width;
+    int height;
+
 
     public Camera()
     {
@@ -55,19 +58,29 @@ public class Camera
         return new Color(r/count, g/count, b/count);
     }
 
-//    public laVector toCamera(laVector)
-//    {
-//
-//    }
-//
-//    public laVector toWorld(laVector)
-//    {
-//
-//    }
-
     public void setObjects(Scene scene)
     {
         objects = scene;
+    }
+
+    public void setWidth(int width)
+    {
+        this.width = width;
+    }
+
+    public void setHeight(int height)
+    {
+        this.height = height;
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public int getHeight()
+    {
+        return height;
     }
 
     public void setAxes()
@@ -96,6 +109,11 @@ public class Camera
         this.position = position;
     }
 
+    public laVector getPosition()
+    {
+        return position;
+    }
+
     public void setZoom(double mag)
     {
         zoom = mag;
@@ -106,48 +124,69 @@ public class Camera
         return zoom;
     }
 
-    public laVector getVector()
-    {
-
-    }
-
-    public Color getColor()
-    {
-
-    }
-
     public laVector getDx()
     {
+        laVector topRight = getTopRight();
+        laVector topLeft = getTopLeft();
 
+        laVector dX = (topRight.subtract(topLeft)).multiply(1d/((double)this.width));
+
+        return dX;
     }
 
     public laVector getDy()
     {
+        laVector topLeft = getTopLeft();
+        laVector bottomLeft = getBottomLeft();
 
+        laVector dY = topLeft.subtract(bottomLeft).multiply(1d/((double)this.height));
+
+        return dY;
     }
 
     public laVector getBottomLeft()
     {
+        laVector bl = lookat.multiply(zoom)
+                .subtract(right)
+                .subtract(head.multiply(((double) this.height) / ((double) this.width)));
 
+        return bl;
     }
 
     public laVector getBottomRight()
     {
+        laVector br = lookat.multiply(zoom)
+                .add(right)
+                .subtract(head.multiply(((double)this.height)/((double)this.width)));
 
+        return br;
     }
 
     public laVector getTopLeft()
     {
+        laVector tl = lookat.multiply(zoom)
+                .subtract(right)
+                .add(head.multiply(((double) this.height) / ((double) this.width)));
 
+        return tl;
     }
 
     public laVector getTopRight()
     {
+        laVector tr = lookat.multiply(zoom)
+                .add(right)
+                .add(head.multiply(((double)this.height)/((double)this.width)));
 
+        return tr;
     }
 
-    public void setResolution(int newRes)
+    public void setAntialiasResolution(int newRes)
     {
         cameraResolution = newRes;
+    }
+
+    public int getAntialiasResolution()
+    {
+        return cameraResolution;
     }
 }
