@@ -1,5 +1,6 @@
 package raytrace.gui;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,12 +10,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import raytrace.engine.Camera;
-import raytrace.engine.Color;
-import raytrace.engine.Scene;
-import raytrace.engine.laVector;
+import raytrace.engine.*;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Controller {
     @FXML private TextField txtWidth;
@@ -101,6 +102,10 @@ public class Controller {
 
     @FXML private void OnRender(ActionEvent event)
     {
+        Executors.newCachedThreadPool();
+
+        ExecutorService threadPool = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors() * 2);
+
         laVector topLeft = camera.getTopLeft();
 //        laVector topRight = camera.getTopRight();
 //        laVector bottomLeft = camera.getBottomLeft();
@@ -118,16 +123,21 @@ public class Controller {
         {
             laVector currentTop = topLeft.add(dX.multiply(x));
 
-            for(int y = 0; y < camera.getHeight(); y++)
-            {
-                laVector currentXY = currentTop.add(dY.multiply(y));
-                laVector currentDir = currentXY.unit();
+            final int finalX = x;
+            threadPool.execute(() -> {
+                for(int y = 0; y < camera.getHeight(); y++)
+                {
+                    laVector currentXY = currentTop.add(dY.multiply(y));
+                    laVector currentDir = currentXY.unit();
+                    Color color = scene.followRay(position, currentDir);
 
-                Color color = scene.followRay(position, currentDir);
-
-                context.setFill(javafx.scene.paint.Color.color(color.red, color.green, color.blue));
-                context.fillRect(x, y, 1, 1);
-            }
+                    final int finalY = y;
+                    Platform.runLater(() -> {
+                        context.setFill(javafx.scene.paint.Color.color(color.red, color.green, color.blue));
+                        context.fillRect(finalX, finalY, 1, 1);
+                    });
+                }
+            });
         }
     }
 }
