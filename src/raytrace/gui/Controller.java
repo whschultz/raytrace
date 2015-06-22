@@ -19,6 +19,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -290,6 +292,9 @@ public class Controller {
 
                 final double finalX = x;
                 threadPool.execute(() -> {
+
+                    final List<Color> column = new ArrayList<Color>((int)(camera.getHeight() * dpp));
+
                     for (double y = 0; y < camera.getHeight() * dpp; y++) {
                         laVector currentXY = currentTop.add(dY.multiply(y));
                         laVector currentDir = currentXY.unit();
@@ -302,17 +307,22 @@ public class Controller {
                             color = scene.followRay(position, currentDir);
                         }
 
-                        final double finalY = y;
-                        Platform.runLater(() -> {
-                            context.setStroke(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
-                            context.setLineWidth(1 / dpp);
-                            context.strokeLine(finalX / dpp + .5 / dpp, finalY / dpp - .5 / dpp, finalX / dpp + .5 / dpp, finalY / dpp + .5 / dpp);
-                        });
+                        column.add(color);
 
                         count.incrementAndGet();
                     }
 
                     Platform.runLater(() -> {
+                        double y = 0;
+                        context.setLineWidth(1 / dpp);
+                        for(Color color : column)
+                        {
+                            context.setStroke(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
+                            context.strokeLine(finalX / dpp + .5 / dpp, y / dpp - .5 / dpp, finalX / dpp + .5 / dpp, y / dpp + .5 / dpp);
+
+                            y++;
+                        }
+
                         prgRenderProgress.setProgress((double) count.get() / total);
 
                         if (count.get() >= total)
