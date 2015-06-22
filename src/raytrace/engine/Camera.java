@@ -10,8 +10,6 @@ public class Camera
     laVector right;
     laVector position;
 
-    Scene objects;
-
     //Matrix transform;
 
     int cameraResolution;
@@ -32,35 +30,28 @@ public class Camera
 
     }
 
-    public Color antialias(laVector direction,laVector xDir,laVector yDir,int res)
+    public Color antialias(Scene objects, laVector direction, laVector dX, laVector dY)
     {
         laVector antialiasing = new laVector(0,0,0);
-        laVector antialiasingReminder = new laVector(0,0,0);
-        double r = 0;
-        double g = 0;
-        double b = 0;
+        Color sum = new Color(0,0,0);
         double count = 0;
 
-        for(int antiX = 0; antiX < res; antiX++)
-        {
-            for(int antiY = 0; antiY < res; antiY++)
-            {
-                Color color = objects.followRay(position, direction.add(antialiasing));
+        final double change = 1d/((double)cameraResolution);
 
-                r += color.red;
-                g += color.green;
-                b += color.blue;
+        for(int antiX = 0; antiX < cameraResolution; antiX++)
+        {
+            laVector top = direction.add(dX.multiply(antiX * change));
+            for(int antiY = 0; antiY < cameraResolution; antiY++)
+            {
+                Color color = objects.followRay(position, top.add(dY.multiply(antiY * change)));
+
+                sum = sum.add(color);
 
                 count += 1;
             }
         }
 
-        return new Color(r/count, g/count, b/count);
-    }
-
-    public void setObjects(Scene scene)
-    {
-        objects = scene;
+        return sum.multiply(1d/count);
     }
 
     public void setWidth(int width)
@@ -157,7 +148,7 @@ public class Camera
     {
         laVector br = lookat.multiply(zoom)
                 .add(right)
-                .subtract(head.multiply(((double)this.height)/((double)this.width)));
+                .subtract(head.multiply(((double) this.height) / ((double)this.width)));
 
         return br;
     }
