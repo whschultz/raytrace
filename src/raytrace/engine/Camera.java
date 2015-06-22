@@ -32,7 +32,6 @@ public class Camera
 
     public Color antialias(Scene objects, laVector direction, laVector dX, laVector dY)
     {
-        laVector antialiasing = new laVector(0,0,0);
         Color sum = new Color(0,0,0);
         double count = 0;
 
@@ -174,6 +173,12 @@ public class Camera
     public void setAntialiasResolution(int newRes)
     {
         cameraResolution = newRes;
+
+        // Don' accept odd numbers other than "1".  Anything else gets bumped up to the next even number.
+        if (newRes % 2 == 1 && newRes != 1)
+        {
+            cameraResolution++;
+        }
     }
 
     public int getAntialiasResolution()

@@ -74,6 +74,7 @@
         <items>
           <Button fx:id="btnOpen" mnemonicParsing="false" onAction="#OnOpen" text="Open" />
             <Button fx:id="btnRender" mnemonicParsing="false" onAction="#OnRender" text="Render" />
+            <Button fx:id="btnSave" disable="true" mnemonicParsing="false" onAction="#OnSave" text="Save" />
             <ProgressIndicator fx:id="prgRenderProgress" progress="0.0" />
         </items>
       </ToolBar>
