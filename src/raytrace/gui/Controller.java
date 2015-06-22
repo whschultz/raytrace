@@ -1,17 +1,20 @@
 package raytrace.gui;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import raytrace.engine.*;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Controller {
     @FXML private TextField txtWidth;
@@ -24,6 +27,8 @@ public class Controller {
     @FXML private Canvas cnvsRender;
 
     @FXML private BorderPane topPane;
+
+    @FXML private ProgressIndicator prgRenderProgress;
 
     final Camera camera = new Camera();
     final Scene scene = new Scene();
@@ -47,11 +52,11 @@ public class Controller {
 
         txtWidth.setText("1280");
         txtHeight.setText("800");
-        txtAntialiasing.setText("1");
+        txtAntialiasing.setText("8");
 
         camera.setWidth((int) cnvsRender.getWidth());
         camera.setHeight((int) cnvsRender.getHeight());
-        camera.setAntialiasResolution(1);
+        camera.setAntialiasResolution(8);
 
         setDefaultScene();
     }
@@ -210,23 +215,23 @@ public class Controller {
         {
             scene.deleteAllObjects();
             scene.openFile(selected);
+            scene.setAttenuation(5);
         }
     }
 
     @FXML private void OnRender(ActionEvent event)
     {
         laVector topLeft = camera.getTopLeft();
-//        laVector topRight = camera.getTopRight();
-//        laVector bottomLeft = camera.getBottomLeft();
-//        laVector bottomRight = camera.getBottomRight();
         laVector position = camera.getPosition();
 
-        laVector dX = camera.getDx();
-        laVector dY = camera.getDy();
+        final laVector dX = camera.getDx();
+        final laVector dY = camera.getDy();
 
         GraphicsContext context = cnvsRender.getGraphicsContext2D();
+        AtomicInteger count = new AtomicInteger(0);
+        final double total = camera.getWidth() * camera.getHeight();
+        final boolean enableAntialiasing = camera.getAntialiasResolution() > 1;
 
-//        final boolean antialias = camera.getAntialiasResolution() > 1;
 
         for(int x = 0; x < camera.getWidth(); x++)
         {
@@ -237,11 +242,24 @@ public class Controller {
                 laVector currentXY = currentTop.add(dY.multiply(y));
                 laVector currentDir = currentXY.unit();
 
-                Color color = scene.followRay(position, currentDir);
+                Color color;
+
+                if (enableAntialiasing)
+                {
+                    color = camera.antialias(scene, currentDir, dX, dY);
+                }
+                else
+                {
+                    color = scene.followRay(position, currentDir);
+                }
 
                 context.setFill(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
                 context.fillRect(x, y, 1, 1);
+
+                count.incrementAndGet();
             }
+
+            prgRenderProgress.setProgress((double)count.get()/total);
         }
     }
 }
