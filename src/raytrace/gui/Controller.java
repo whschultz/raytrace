@@ -240,13 +240,13 @@ public class Controller {
         final boolean enableAntialiasing = camera.getAntialiasResolution() > 1;
 
 
-        for(int x = 0; x < camera.getWidth(); x++)
+        for(double x = 0; x < camera.getWidth(); x++)
         {
             laVector currentTop = topLeft.add(dX.multiply(x));
 
             final int finalX = x;
             threadPool.execute(() -> {
-                for (int y = 0; y < camera.getHeight(); y++) {
+                for (double y = 0; y < camera.getHeight(); y++) {
                     laVector currentXY = currentTop.add(dY.multiply(y));
                     laVector currentDir = currentXY.unit();
 
@@ -260,8 +260,9 @@ public class Controller {
 
                     final int finalY = y;
                     Platform.runLater(() -> {
-                        context.setFill(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
-                        context.fillRect(finalX, finalY, 1, 1);
+                        context.setStroke(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
+                        context.setLineWidth(1);
+                        context.strokeLine(x +.5, y - .5, x + .5, y + .5);
                     });
 
                     count.incrementAndGet();
