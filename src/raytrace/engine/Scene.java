@@ -18,7 +18,7 @@ public class Scene
     Collection<RaytraceObject> objects = new ArrayList<RaytraceObject>();
     Collection<LightSource> lights = new ArrayList<LightSource>();
 
-    double attenuation;
+    double attenuation = 1;
 
 
     public boolean addObject(RaytraceObject object)
@@ -39,6 +39,7 @@ public class Scene
 
         if (output)
         {
+            light.setAttenuation(attenuation);
             lights.add(light);
         }
 
@@ -58,7 +59,12 @@ public class Scene
 
     public void setAttenuation(double atten)
     {
+        this.attenuation = atten;
 
+        for(LightSource light : this.lights)
+        {
+            light.setAttenuation(atten);
+        }
     }
 
     public Color followRay(laVector start, laVector direction)

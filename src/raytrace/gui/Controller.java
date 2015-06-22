@@ -66,7 +66,7 @@ public class Controller {
         camera.setZoom(4d);
 
         scene.setBackground(15d/255d, 10d/255d, 25.5d/255d);
-        scene.setAttenuation(3000);
+        scene.setAttenuation(1d/10d);
 
         Plane plane = new Plane();
         plane.setCenter(new laVector(0,-3,0));
@@ -89,7 +89,7 @@ public class Controller {
 
         float x0 = 0.0f;
 
-        final int dim = 5;
+        final double dim = 5;
 
         Color white = new Color(1,1,1);
 
@@ -107,7 +107,7 @@ public class Controller {
                     if ( k > 0 )
                     {
                         LightSource sparelight = new LightSource();
-                        sparelight.setColor(255, 255, 255);
+                        sparelight.setColor(white);
                         sparelight.setPosition(new laVector(x, k * dz - 4, y));
                         sparelight.setRadius(.1);
                         scene.addLight(sparelight);
@@ -123,9 +123,10 @@ public class Controller {
 
                     if ( k < dim )
                     {
-                        sparesphere.setColor(new Color( Math.cos( i*Math.PI/( 2.0f*(dim-k) ) ),
-                        Math.cos( (i-j-dim)*Math.PI/(2.0f*(dim-k)) ),
-                        Math.sin( (j)*Math.PI/(2.0f*(dim-k)) ) ));
+                        sparesphere.setColor(new Color(
+                                Math.cos( i*Math.PI/( 2.0f*(dim-k) ) ),
+                                Math.cos( (i-j-dim)*Math.PI/(2.0f*(dim-k)) ),
+                                Math.sin( (j)*Math.PI/(2.0f*(dim-k)) ) ));
                     }
                     else
                     {
