@@ -244,7 +244,7 @@ public class Controller {
         {
             laVector currentTop = topLeft.add(dX.multiply(x));
 
-            final int finalX = x;
+            final double finalX = x;
             threadPool.execute(() -> {
                 for (double y = 0; y < camera.getHeight(); y++) {
                     laVector currentXY = currentTop.add(dY.multiply(y));
@@ -258,11 +258,11 @@ public class Controller {
                         color = scene.followRay(position, currentDir);
                     }
 
-                    final int finalY = y;
+                    final double finalY = y;
                     Platform.runLater(() -> {
                         context.setStroke(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
                         context.setLineWidth(1);
-                        context.strokeLine(x +.5, y - .5, x + .5, y + .5);
+                        context.strokeLine(finalX + .5, finalY - .5, finalX + .5, finalY + .5);
                     });
 
                     count.incrementAndGet();
