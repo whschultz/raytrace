@@ -231,47 +231,66 @@ public class Controller {
         laVector topLeft = camera.getTopLeft();
         laVector position = camera.getPosition();
 
-        final laVector dX = camera.getDx();
-        final laVector dY = camera.getDy();
 
         GraphicsContext context = cnvsRender.getGraphicsContext2D();
         AtomicInteger count = new AtomicInteger(0);
         final double total = camera.getWidth() * camera.getHeight();
-        final boolean enableAntialiasing = camera.getAntialiasResolution() > 1;
+        final int originalAntialiasResolution = camera.getAntialiasResolution();
+        final boolean enableAntialiasing = originalAntialiasResolution > 1;
+
+        final double dpp;
+        final laVector dX;
+        final laVector dY;
 
 
-        for(double x = 0; x < camera.getWidth(); x++)
-        {
-            laVector currentTop = topLeft.add(dX.multiply(x));
+        try {
+            if (enableAntialiasing) {
+                dpp = 2;
+                camera.setAntialiasResolution(originalAntialiasResolution / 2);
+                dX = camera.getDx().multiply(1 / dpp);
+                dY = camera.getDy().multiply(1 / dpp);
+            } else {
+                dpp = 1;
+                dX = camera.getDx();
+                dY = camera.getDy();
+            }
 
-            final double finalX = x;
-            threadPool.execute(() -> {
-                for (double y = 0; y < camera.getHeight(); y++) {
-                    laVector currentXY = currentTop.add(dY.multiply(y));
-                    laVector currentDir = currentXY.unit();
+            for (double x = 0; x < camera.getWidth() * dpp; x++) {
+                laVector currentTop = topLeft.add(dX.multiply(x));
 
-                    Color color;
+                final double finalX = x;
+                threadPool.execute(() -> {
+                    for (double y = 0; y < camera.getHeight() * dpp; y++) {
+                        laVector currentXY = currentTop.add(dY.multiply(y));
+                        laVector currentDir = currentXY.unit();
 
-                    if (enableAntialiasing) {
-                        color = camera.antialias(scene, currentDir, dX, dY);
-                    } else {
-                        color = scene.followRay(position, currentDir);
+                        Color color;
+
+                        if (enableAntialiasing) {
+                            color = camera.antialias(scene, currentDir, dX, dY);
+                        } else {
+                            color = scene.followRay(position, currentDir);
+                        }
+
+                        final double finalY = y;
+                        Platform.runLater(() -> {
+                            context.setStroke(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
+                            context.setLineWidth(1 / dpp);
+                            context.strokeLine(finalX / dpp + .5 / dpp, finalY / dpp - .5 / dpp, finalX / dpp + .5 / dpp, finalY / dpp + .5 / dpp);
+                        });
+
+                        count.incrementAndGet();
                     }
 
-                    final double finalY = y;
                     Platform.runLater(() -> {
-                        context.setStroke(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
-                        context.setLineWidth(1);
-                        context.strokeLine(finalX + .5, finalY - .5, finalX + .5, finalY + .5);
+                        prgRenderProgress.setProgress((double) count.get() / total);
                     });
-
-                    count.incrementAndGet();
-                }
-
-                Platform.runLater(() -> {
-                    prgRenderProgress.setProgress((double) count.get() / total);
                 });
-            });
+            }
+        }
+        finally
+        {
+            camera.setAntialiasResolution(originalAntialiasResolution);
         }
     }
 }

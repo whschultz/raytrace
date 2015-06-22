@@ -32,7 +32,6 @@ public class Camera
 
     public Color antialias(Scene objects, laVector direction, laVector dX, laVector dY)
     {
-        laVector antialiasing = new laVector(0,0,0);
         Color sum = new Color(0,0,0);
         double count = 0;
 
