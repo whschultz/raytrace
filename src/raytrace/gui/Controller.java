@@ -219,6 +219,11 @@ public class Controller {
             scene.deleteAllObjects();
             scene.openFile(selected);
             scene.setAttenuation(5);
+
+            camera.setLookat(new laVector(0, 0, -1));
+            camera.setTop(new laVector(0, 1, 0));
+            camera.setPosition(new laVector(0, 0, 1.5));
+            camera.setZoom(1);
         }
     }
 
