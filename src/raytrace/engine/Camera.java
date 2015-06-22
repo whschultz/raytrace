@@ -173,6 +173,12 @@ public class Camera
     public void setAntialiasResolution(int newRes)
     {
         cameraResolution = newRes;
+
+        // Don' accept odd numbers other than "1".  Anything else gets bumped up to the next even number.
+        if (newRes % 2 == 1 && newRes != 1)
+        {
+            cameraResolution++;
+        }
     }
 
     public int getAntialiasResolution()

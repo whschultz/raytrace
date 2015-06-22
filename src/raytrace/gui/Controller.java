@@ -5,6 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import raytrace.engine.*;
 
@@ -230,7 +232,7 @@ public class Controller {
 
             camera.setLookat(new laVector(0, 0, -1));
             camera.setTop(new laVector(0, 1, 0));
-            camera.setPosition(new laVector(0, 0, 4));
+            camera.setPosition(new laVector(0, 0, 3.5));
             camera.setZoom(2);
         }
     }
@@ -243,7 +245,14 @@ public class Controller {
         File selected = chooser.showSaveDialog(topPane.getScene().getWindow());
 
         if (selected != null) {
-            WritableImage image = cnvsRender.snapshot(null, null);
+            int dpp = getDpp();
+
+            WritableImage image = new WritableImage((int)(cnvsRender.getWidth() * dpp),(int)( cnvsRender.getHeight() * dpp));
+
+            SnapshotParameters params = new SnapshotParameters();
+            params.setTransform(Transform.scale(dpp, dpp));
+            cnvsRender.snapshot(params, image);
+
             BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
             try {
                 ImageIO.write(bImage, "png", selected);
@@ -251,6 +260,18 @@ public class Controller {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Get Dots per Pixel
+     *
+     * Note that if antialiasing is turned on at all, this will be set to two.
+     *
+     * @return
+     */
+    private int getDpp()
+    {
+        return camera.getAntialiasResolution() > 1 ? 2 : 1;
     }
 
     @FXML private void OnRender(ActionEvent event)
@@ -268,22 +289,15 @@ public class Controller {
         final int originalAntialiasResolution = camera.getAntialiasResolution();
         final boolean enableAntialiasing = originalAntialiasResolution > 1;
 
-        final double dpp;
+        final double dpp = getDpp();
         final laVector dX;
         final laVector dY;
 
 
         try {
-            if (enableAntialiasing) {
-                dpp = 2;
-                camera.setAntialiasResolution(originalAntialiasResolution / 2);
-                dX = camera.getDx().multiply(1 / dpp);
-                dY = camera.getDy().multiply(1 / dpp);
-            } else {
-                dpp = 1;
-                dX = camera.getDx();
-                dY = camera.getDy();
-            }
+            camera.setAntialiasResolution(originalAntialiasResolution / (int)dpp);
+            dX = camera.getDx().multiply(1d / dpp);
+            dY = camera.getDy().multiply(1d / dpp);
 
             final double total = camera.getWidth() * camera.getHeight() * dpp * dpp;
 
@@ -318,7 +332,7 @@ public class Controller {
                         for(Color color : column)
                         {
                             context.setStroke(javafx.scene.paint.Color.color(color.getRed(), color.getGreen(), color.getBlue()));
-                            context.strokeLine(finalX / dpp + .5 / dpp, y / dpp - .5 / dpp, finalX / dpp + .5 / dpp, y / dpp + .5 / dpp);
+                            context.strokeLine(finalX / dpp + .5d / dpp, y / dpp - .5d / dpp, finalX / dpp + .5d / dpp, y / dpp + .5d / dpp);
 
                             y++;
                         }
