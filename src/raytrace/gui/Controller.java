@@ -2,6 +2,7 @@ package raytrace.gui;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -9,11 +10,15 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import raytrace.engine.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -26,6 +31,7 @@ public class Controller {
 
     @FXML private Button btnOpen;
     @FXML private Button btnRender;
+    @FXML private Button btnSave;
 
     @FXML private Canvas cnvsRender;
 
@@ -53,13 +59,13 @@ public class Controller {
         cnvsRender.setWidth(1280);
         cnvsRender.setHeight(800);
 
-        txtWidth.setText("1280");
-        txtHeight.setText("800");
-        txtAntialiasing.setText("8");
+        txtWidth.setText("2560");
+        txtHeight.setText("1440");
+        txtAntialiasing.setText("10");
 
         camera.setWidth((int) cnvsRender.getWidth());
         camera.setHeight((int) cnvsRender.getHeight());
-        camera.setAntialiasResolution(8);
+        camera.setAntialiasResolution(10);
 
         setDefaultScene();
     }
@@ -222,8 +228,26 @@ public class Controller {
 
             camera.setLookat(new laVector(0, 0, -1));
             camera.setTop(new laVector(0, 1, 0));
-            camera.setPosition(new laVector(0, 0, 1.5));
-            camera.setZoom(1);
+            camera.setPosition(new laVector(0, 0, 4));
+            camera.setZoom(2);
+        }
+    }
+
+    @FXML private void OnSave(ActionEvent event)
+    {
+        FileChooser chooser = new FileChooser();
+
+        chooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("PNG Image File", "png"));
+        File selected = chooser.showSaveDialog(topPane.getScene().getWindow());
+
+        if (selected != null) {
+            WritableImage image = cnvsRender.snapshot(null, null);
+            BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+            try {
+                ImageIO.write(bImage, "png", selected);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -269,7 +293,7 @@ public class Controller {
                         laVector currentXY = currentTop.add(dY.multiply(y));
                         laVector currentDir = currentXY.unit();
 
-                        Color color;
+                        final Color color;
 
                         if (enableAntialiasing) {
                             color = camera.antialias(scene, currentDir, dX, dY);
@@ -289,9 +313,15 @@ public class Controller {
 
                     Platform.runLater(() -> {
                         prgRenderProgress.setProgress((double) count.get() / total);
+
+                        if (count.get() >= total)
+                        {
+                            btnSave.setDisable(false);
+                        }
                     });
                 });
             }
+
         }
         finally
         {
