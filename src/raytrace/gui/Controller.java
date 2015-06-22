@@ -263,7 +263,6 @@ public class Controller {
 
         GraphicsContext context = cnvsRender.getGraphicsContext2D();
         AtomicInteger count = new AtomicInteger(0);
-        final double total = camera.getWidth() * camera.getHeight();
         final int originalAntialiasResolution = camera.getAntialiasResolution();
         final boolean enableAntialiasing = originalAntialiasResolution > 1;
 
@@ -283,6 +282,8 @@ public class Controller {
                 dX = camera.getDx();
                 dY = camera.getDy();
             }
+
+            final double total = camera.getWidth() * camera.getHeight() * dpp * dpp;
 
             for (double x = 0; x < camera.getWidth() * dpp; x++) {
                 laVector currentTop = topLeft.add(dX.multiply(x));
