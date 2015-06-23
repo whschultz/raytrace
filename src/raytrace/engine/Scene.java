@@ -96,6 +96,8 @@ public class Scene
 
                 outputColor = reflectedColor.multiply(intersected.getSpecular()).add(outputColor);
             }
+
+            outputColor = outputColor.multiply(intersected.getColor(results.intersection));
         }
 
         return outputColor;

@@ -23,6 +23,11 @@ public class Color
         return new Color(red * product, green * product, blue * product);
     }
 
+    public Color multiply(Color other)
+    {
+        return new Color(red * other.red, green * other.green, blue * other.blue);
+    }
+
     public Color add(Color val)
     {
         return new Color(red + val.red, green + val.green, blue + val.blue);
@@ -41,5 +46,10 @@ public class Color
     public double getBlue()
     {
         return Math.max(Math.min(blue, 1), 0);
+    }
+
+    public Color norm()
+    {
+        return new Color(getRed(), getGreen(), getBlue());
     }
 }

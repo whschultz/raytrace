@@ -63,12 +63,14 @@ public class Sphere extends RaytraceObject
         return output;
     }
 
-    @Override
-    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light) {
-        Color output = light.diffuse(intersection, getNorm(intersection), direction, diffuse, phong);
-
-        return output;
-    }
+//    @Override
+//    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light) {
+//        assert t > 0;
+//
+//        Color output = light.diffuse(intersection, getNorm(intersection), direction, getDiffuse(), getPhong());
+//
+//        return output;
+//    }
 
     @Override
     public laVector reflect(laVector start, laVector direction, double t, laVector intersection) {

@@ -65,11 +65,11 @@ public class Controller {
 
         txtWidth.setText("2560");
         txtHeight.setText("1440");
-        txtAntialiasing.setText("10");
+        txtAntialiasing.setText("4");
 
         camera.setWidth((int) cnvsRender.getWidth());
         camera.setHeight((int) cnvsRender.getHeight());
-        camera.setAntialiasResolution(10);
+        camera.setAntialiasResolution(4);
 
         setDefaultScene();
     }
@@ -278,7 +278,7 @@ public class Controller {
     {
         Executors.newCachedThreadPool();
 
-        ExecutorService threadPool = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors() * 2);
+        ExecutorService threadPool = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
 
         laVector topLeft = camera.getTopLeft();
         laVector position = camera.getPosition();

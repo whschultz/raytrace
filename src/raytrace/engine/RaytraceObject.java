@@ -24,7 +24,16 @@ public abstract class RaytraceObject
         return start.add(direction.multiply(t));
     }
 
-    public abstract Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light);
+    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light)
+    {
+        assert t > 0;
+
+        Color output = light.diffuse(intersection, getNorm(intersection), direction, getDiffuse(), getPhong());
+
+        return output;
+
+    }
+
     public abstract laVector reflect(laVector start, laVector direction, double t, laVector intersection);
     public abstract laVector getNorm(laVector atPoint);
 
