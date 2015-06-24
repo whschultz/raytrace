@@ -97,7 +97,7 @@ public class Controller {
         plane.setDiffuse(.6);
         plane.setSpecular(.4);
         plane.setPhong(30);
-        plane.setColor(new CheckeredSurfaceColor(white, grey));
+        plane.setColor(new CheckeredSurfaceColor(white, grey, new laVector(0,.5,0)));
 
         scene.addObject(plane);
 
