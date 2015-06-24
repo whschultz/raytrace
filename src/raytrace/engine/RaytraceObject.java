@@ -6,7 +6,7 @@ package raytrace.engine;
 public abstract class RaytraceObject
 {
     protected laVector center;
-    protected Color color;
+    private SurfaceColor surfaceColor;
     protected Color background;
 
     protected double ambient;
@@ -44,7 +44,12 @@ public abstract class RaytraceObject
 
     public void setColor(Color color)
     {
-        this.color = color;
+        surfaceColor = new ConstantSurfaceColor(color);
+    }
+
+    public void setColor(SurfaceColor color)
+    {
+        this.surfaceColor = color;
     }
 
     public void setBackground(Color color)
@@ -92,7 +97,7 @@ public abstract class RaytraceObject
 
     public Color getColor(laVector atPoint)
     {
-        return color;
+        return surfaceColor.getColor(atPoint);
     }
 
     public double getPhong()

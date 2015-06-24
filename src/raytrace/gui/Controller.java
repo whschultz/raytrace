@@ -76,6 +76,9 @@ public class Controller {
 
     private void setDefaultScene()
     {
+        Color white = new Color(1,1,1);
+        Color grey = new Color(.5,.5,.5);
+
         scene.deleteAllObjects();
 
         camera.setPosition(new laVector(0,14,35));
@@ -94,7 +97,7 @@ public class Controller {
         plane.setDiffuse(.6);
         plane.setSpecular(.4);
         plane.setPhong(30);
-        plane.setColor(new Color(1,1,1));
+        plane.setColor(new CheckeredSurfaceColor(white, grey));
 
         scene.addObject(plane);
 
@@ -109,7 +112,6 @@ public class Controller {
 
         final double dim = 5;
 
-        Color white = new Color(1,1,1);
 
         Sphere sparesphere = new Sphere();
         sparesphere.setCenter( new laVector(-3, 0, 0 ));
