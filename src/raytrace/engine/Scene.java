@@ -11,8 +11,9 @@ import java.util.*;
 public class Scene
 {
     public int maxSpecDepth = 10;
-    public final boolean softShadows = false;
-    public int softShadowLevel = 5;
+    public final boolean softShadows = true;
+    public int softShadowLevel = 4;
+    public int softShadowSteps = 4;
 
     Color background;
     Collection<RaytraceObject> objects = new ArrayList<RaytraceObject>();
@@ -136,7 +137,62 @@ public class Scene
 
         if (softShadows)
         {
+            boolean done = false;
+            double previous_success = -1d;
 
+            for(double layer = this.softShadowLevel; layer > 0; layer--)
+            {
+                if (total > .5d && success < .5d)
+                {
+                    // Then we've been around the outer shell and nothing created
+                    // a shadow.  The inner shell definitely won't either.
+                    break;
+                }
+
+                double currentRadius = (layer/((double)softShadowLevel))*light.getRadius();
+
+                double dTheta = 2.000001d*Math.PI/((double)(softShadowSteps*layer + 1));
+                double dPhi = Math.PI/(softShadowSteps*layer + 2);
+
+                for(double theta = 0; theta < 2*Math.PI; theta += dTheta)
+                {
+                    for(double phi = dPhi; phi < Math.PI; phi += dPhi)
+                    {
+                        if (!done)
+                        {
+                            laVector dir = laVector.fromSpherical(currentRadius, theta, phi);
+
+                            laVector lightPos = point.add(dir);
+                            laVector newDirection = lightPos.subtract(intersection);
+                            double distance = newDirection.norm();
+                            newDirection = newDirection.unit();
+
+                            // dot product is related to the cosine of the angle between the two.
+                            // If the dot product is positive, the angle is acute.  Otherwise, it's
+                            // right or obtuse.  In which case, the light is irrelevant.
+                            if ( intersected.getNorm(intersection).dot(newDirection) > 0 )
+                            {
+                                IntersectResults results = this.intersect(intersection, newDirection, intersected);
+
+                                final double shadowPoint = results.t;
+                                if ((shadowPoint < 0) || (shadowPoint > distance))
+                                {
+                                    success++;
+                                }
+                            }
+                        }
+
+                        total++;
+                    }
+                }
+
+                if (success <= previous_success +.5d)
+                {
+                    done = true;
+                }
+
+                previous_success = success;
+            }
         }
         else
         {
