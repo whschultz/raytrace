@@ -17,7 +17,7 @@ public class CheckeredSurfaceColor extends SurfaceColor
     @Override
     public Color getColor(laVector intersection)
     {
-        if (Math.round(intersection.get_x() + intersection.get_y() + intersection.get_z()) % 2 == 0)
+        if ((Math.floor(intersection.get_x()) + Math.floor(intersection.get_y()) + Math.floor(intersection.get_z())) % 2 == 0)
         {
             return evenColor;
         }
