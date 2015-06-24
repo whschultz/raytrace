@@ -9,22 +9,22 @@ public abstract class RaytraceObject
     private SurfaceColor surfaceColor;
     protected Color background;
 
-    protected double ambient;
-    protected double diffuse;
-    protected double specular;
-    protected double phong;
+    protected float ambient;
+    protected float diffuse;
+    protected float specular;
+    protected float phong;
 
     protected RaytraceObject()
     {
     }
 
-    public abstract double intersect(laVector start, laVector direction);
-    public laVector intersect(laVector start, laVector direction, double t)
+    public abstract float intersect(laVector start, laVector direction);
+    public laVector intersect(laVector start, laVector direction, float t)
     {
         return start.add(direction.multiply(t));
     }
 
-    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light)
+    public Color intersectColor(laVector start, laVector direction, float t, laVector intersection, LightSource light)
     {
         assert t > 0;
 
@@ -34,7 +34,7 @@ public abstract class RaytraceObject
 
     }
 
-    public abstract laVector reflect(laVector start, laVector direction, double t, laVector intersection);
+    public abstract laVector reflect(laVector start, laVector direction, float t, laVector intersection);
     public abstract laVector getNorm(laVector atPoint);
 
     public void setCenter(laVector center)
@@ -57,7 +57,7 @@ public abstract class RaytraceObject
         this.background = color;
     }
 
-    public void setAmbient(double ambient)
+    public void setAmbient(float ambient)
     {
         this.ambient = ambient;
 
@@ -68,7 +68,7 @@ public abstract class RaytraceObject
         }
     }
 
-    public void setDiffuse(double diffuse)
+    public void setDiffuse(float diffuse)
     {
         this.diffuse = diffuse;
 
@@ -79,7 +79,7 @@ public abstract class RaytraceObject
         }
     }
 
-    public void setSpecular(double specular)
+    public void setSpecular(float specular)
     {
         this.specular = specular;
 
@@ -90,7 +90,7 @@ public abstract class RaytraceObject
         }
     }
 
-    public void setPhong(double phong)
+    public void setPhong(float phong)
     {
         this.phong = phong;
     }
@@ -100,22 +100,22 @@ public abstract class RaytraceObject
         return surfaceColor.getColor(atPoint);
     }
 
-    public double getPhong()
+    public float getPhong()
     {
         return phong;
     }
 
-    public double getSpecular()
+    public float getSpecular()
     {
         return specular;
     }
 
-    public double getDiffuse()
+    public float getDiffuse()
     {
         return diffuse;
     }
 
-    public double getAmbient()
+    public float getAmbient()
     {
         return ambient;
     }

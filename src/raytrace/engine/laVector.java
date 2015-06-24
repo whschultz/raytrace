@@ -5,39 +5,39 @@ package raytrace.engine;
  */
 public class laVector
 {
-    final private double x_coor;
-    final private double y_coor;
-    final private double z_coor;
+    final private float x_coor;
+    final private float y_coor;
+    final private float z_coor;
 
-    public double get_x()
+    public float get_x()
     {
         return x_coor;
     }
 
-    public double get_y()
+    public float get_y()
     {
         return y_coor;
     }
 
-    public double get_z()
+    public float get_z()
     {
         return z_coor;
     }
 
-    public laVector(double x, double y, double z)
+    public laVector(float x, float y, float z)
     {
         x_coor = x;
         y_coor = y;
         z_coor = z;
     }
 
-    public static laVector fromSpherical(double r, double theta, double phi)
+    public static laVector fromSpherical(float r, float theta, float phi)
     {
-        final double sinPhi = Math.sin(phi);
+        final float sinPhi = (float)Math.sin(phi);
 
-        double x = r*sinPhi*Math.cos(theta);
-        double y = r*sinPhi*Math.sin(theta);
-        double z = r*Math.cos(phi);
+        float x = r*sinPhi*(float)Math.cos(theta);
+        float y = r*sinPhi*(float)Math.sin(theta);
+        float z = r*(float)Math.cos(phi);
 
         return new laVector(x,y,z);
     }
@@ -79,9 +79,9 @@ public class laVector
         return new laVector(x_coor - rhs.x_coor, y_coor - rhs.y_coor, z_coor - rhs.z_coor);
     }
 
-    public double norm()
+    public float norm()
     {
-        return Math.sqrt(x_coor * x_coor + y_coor * y_coor + z_coor * z_coor);
+        return (float)Math.sqrt(x_coor * x_coor + y_coor * y_coor + z_coor * z_coor);
     }
 
     public laVector cross(laVector rhs)
@@ -96,24 +96,24 @@ public class laVector
         return lhs.cross(rhs);
     }
 
-    public double dot(laVector rhs)
+    public float dot(laVector rhs)
     {
         return x_coor*rhs.x_coor + y_coor*rhs.y_coor + z_coor*rhs.z_coor;
     }
 
-    public static double dot(laVector lhs, laVector rhs)
+    public static float dot(laVector lhs, laVector rhs)
     {
         return lhs.dot(rhs);
     }
 
-    public laVector multiply(double val)
+    public laVector multiply(float val)
     {
         return new laVector(val * x_coor, val*y_coor, val*z_coor);
     }
 
     public  laVector unit()
     {
-        final double length = this.norm();
+        final float length = this.norm();
 
         return new laVector(x_coor / length, y_coor / length, z_coor / length);
     }

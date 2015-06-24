@@ -19,7 +19,7 @@ public class Scene
     Collection<RaytraceObject> objects = new ArrayList<RaytraceObject>();
     Collection<LightSource> lights = new ArrayList<LightSource>();
 
-    double attenuation = 1;
+    float attenuation = 1;
 
 
     public boolean addObject(RaytraceObject object)
@@ -47,7 +47,7 @@ public class Scene
         return output;
     }
 
-    public void setBackground(double r, double g, double b)
+    public void setBackground(float r, float g, float b)
     {
         background = new Color(r,g,b);
     }
@@ -58,7 +58,7 @@ public class Scene
         objects.clear();
     }
 
-    public void setAttenuation(double atten)
+    public void setAttenuation(float atten)
     {
         this.attenuation = atten;
 
@@ -104,7 +104,7 @@ public class Scene
         return outputColor;
     }
 
-    public Color followRayDiffuse(laVector start,laVector direction, double t, laVector intersection, RaytraceObject object)
+    public Color followRayDiffuse(laVector start,laVector direction, float t, laVector intersection, RaytraceObject object)
     {
         Color c = new Color(0,0,0);
 
@@ -121,26 +121,26 @@ public class Scene
         return c;
     }
 
-//    public Color followRaySpecular(laVector, laVector, double, int, int ignore)
+//    public Color followRaySpecular(laVector, laVector, float, int, int ignore)
 //    {
 //
 //    }
 
-    public Color intersect(laVector start, laVector direction, double t, laVector intersection, LightSource light, RaytraceObject intersected)
+    public Color intersect(laVector start, laVector direction, float t, laVector intersection, LightSource light, RaytraceObject intersected)
     {
         Color intersectColor = intersected.intersectColor(start, direction, t, intersection, light);
 
         final laVector point = light.getPos();
 
-        double success = 0;
-        double total = 0;
+        float success = 0;
+        float total = 0;
 
         if (softShadows)
         {
             boolean done = false;
-            double previous_success = -1d;
+            float previous_success = -1f;
 
-            for(double layer = this.softShadowLevel; layer > 0; layer--)
+            for(float layer = this.softShadowLevel; layer > 0; layer--)
             {
                 if (total > .5d && success < .5d)
                 {
@@ -149,14 +149,14 @@ public class Scene
                     break;
                 }
 
-                double currentRadius = (layer/((double)softShadowLevel))*light.getRadius();
+                float currentRadius = (layer/((float)softShadowLevel))*light.getRadius();
 
-                double dTheta = 2.000001d*Math.PI/((double)(softShadowSteps*layer + 1));
-                double dPhi = Math.PI/(softShadowSteps*layer + 2);
+                float dTheta = 2.000001f*(float)Math.PI/((float)(softShadowSteps*layer + 1));
+                float dPhi = (float)Math.PI/(softShadowSteps*layer + 2);
 
-                for(double theta = 0; theta < 2*Math.PI; theta += dTheta)
+                for(float theta = 0; theta < 2*Math.PI; theta += dTheta)
                 {
-                    for(double phi = dPhi; phi < Math.PI; phi += dPhi)
+                    for(float phi = dPhi; phi < Math.PI; phi += dPhi)
                     {
                         if (!done)
                         {
@@ -164,7 +164,7 @@ public class Scene
 
                             laVector lightPos = point.add(dir);
                             laVector newDirection = lightPos.subtract(intersection);
-                            double distance = newDirection.norm();
+                            float distance = newDirection.norm();
                             newDirection = newDirection.unit();
 
                             // dot product is related to the cosine of the angle between the two.
@@ -174,7 +174,7 @@ public class Scene
                             {
                                 IntersectResults results = this.intersect(intersection, newDirection, intersected);
 
-                                final double shadowPoint = results.t;
+                                final float shadowPoint = results.t;
                                 if ((shadowPoint < 0) || (shadowPoint > distance))
                                 {
                                     success++;
@@ -197,7 +197,7 @@ public class Scene
         else
         {
             laVector newDirection = point.subtract(intersection);
-            double distance = newDirection.norm();
+            float distance = newDirection.norm();
             newDirection = newDirection.unit();
 
             if (intersected.getNorm(intersection).dot(newDirection) > 0)
@@ -226,7 +226,7 @@ public class Scene
             if (object == ignore)
                 continue;
 
-            double t = object.intersect(start, direction);
+            float t = object.intersect(start, direction);
 
             if (t <= 0)
                 continue;
@@ -258,9 +258,9 @@ public class Scene
         {
             try (Scanner scanner = new Scanner(file, StandardCharsets.UTF_8.name())) {
 
-                double r = Double.parseDouble(scanner.next());
-                double g = Double.parseDouble(scanner.next());
-                double b = Double.parseDouble(scanner.next());
+                float r = Float.parseFloat(scanner.next());
+                float g = Float.parseFloat(scanner.next());
+                float b = Float.parseFloat(scanner.next());
 
                 this.setBackground(r, g, b);
 
@@ -270,9 +270,9 @@ public class Scene
                 {
                     LightSource light = new LightSource();
 
-                    double x = Double.parseDouble(scanner.next());
-                    double y = Double.parseDouble(scanner.next());
-                    double z = Double.parseDouble(scanner.next());
+                    float x = Float.parseFloat(scanner.next());
+                    float y = Float.parseFloat(scanner.next());
+                    float z = Float.parseFloat(scanner.next());
 
                     light.setPosition(new laVector(x, y, z));
 
@@ -286,12 +286,12 @@ public class Scene
 
                 for(int i = 0; i < numSurfaces; i++)
                 {
-                    double[] vals = new double[9];
+                    float[] vals = new float[9];
                     int phong;
 
                     for (int j =0; j < vals.length; j++)
                     {
-                        vals[j] = Double.parseDouble(scanner.next());
+                        vals[j] = Float.parseFloat(scanner.next());
                     }
 
                     phong = Integer.parseInt(scanner.next());
@@ -303,7 +303,7 @@ public class Scene
                     s.b = vals[5];
 
                     s.ambient = vals[0];
-                    s.diffuse = (r + g + b) / 3d;
+                    s.diffuse = (r + g + b) / 3f;
                     s.specular = vals[6];
                     s.phong = phong;
 
@@ -332,10 +332,10 @@ public class Scene
                         case "S":
                         default:
                             {
-                                double x = Double.parseDouble(lineScanner.next());
-                                double y = Double.parseDouble(lineScanner.next());
-                                double z = Double.parseDouble(lineScanner.next());
-                                double radius = Double.parseDouble(lineScanner.next());
+                                float x = Float.parseFloat(lineScanner.next());
+                                float y = Float.parseFloat(lineScanner.next());
+                                float z = Float.parseFloat(lineScanner.next());
+                                float radius = Float.parseFloat(lineScanner.next());
 
                                 Sphere s = new Sphere();
 
@@ -372,20 +372,20 @@ public class Scene
 
     private static class Surface
     {
-        public double r;
-        public double g;
-        public double b;
+        public float r;
+        public float g;
+        public float b;
 
-        public double ambient;
-        public double diffuse;
-        public double specular;
-        public double phong;
+        public float ambient;
+        public float diffuse;
+        public float specular;
+        public float phong;
     }
 
     private class IntersectResults
     {
         RaytraceObject intersected = null;
-        double t = -1;
+        float t = -1;
         laVector intersection = null;
     }
 }

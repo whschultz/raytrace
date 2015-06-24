@@ -18,20 +18,20 @@ public class Plane extends RaytraceObject
         this.normal = normal;
     }
 
-    public double intersect(laVector start, laVector dir)
+    public float intersect(laVector start, laVector dir)
     {
-        final double dot = dir.dot(normal);
+        final float dot = dir.dot(normal);
 
         if (dot == 0)
             return -1;
 
-        final double intersect = (center.dot(normal) - start.dot(normal)) / dir.dot(normal);
+        final float intersect = (center.dot(normal) - start.dot(normal)) / dir.dot(normal);
 
         return intersect;
     }
 
 //    @Override
-//    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light) {
+//    public Color intersectColor(laVector start, laVector direction, float t, laVector intersection, LightSource light) {
 //        if ( t <= 0)
 //        {
 //            return background;
@@ -43,7 +43,7 @@ public class Plane extends RaytraceObject
 //    }
 
     @Override
-    public laVector reflect(laVector start, laVector direction, double t, laVector intersection) {
+    public laVector reflect(laVector start, laVector direction, float t, laVector intersection) {
         return direction.reflect(normal);
     }
 

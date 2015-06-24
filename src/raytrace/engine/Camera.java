@@ -13,7 +13,7 @@ public class Camera
     //Matrix transform;
 
     int cameraResolution;
-    double zoom;
+    float zoom;
 
     int width;
     int height;
@@ -23,7 +23,7 @@ public class Camera
     {
         lookat = new laVector(0, 0, -1).unit();
         head = new laVector(0, 1, 0);
-        position = new laVector(0, 0, 1.5);
+        position = new laVector(0, 0, 1.5f);
         cameraResolution = 1;
         setAxes();
         zoom = 1;
@@ -33,9 +33,9 @@ public class Camera
     public Color antialias(Scene objects, laVector direction, laVector dX, laVector dY)
     {
         Color sum = new Color(0,0,0);
-        double count = 0;
+        float count = 0;
 
-        final double change = 1d/((double)cameraResolution);
+        final float change = 1f/((float)cameraResolution);
 
         for(int antiX = 0; antiX < cameraResolution; antiX++)
         {
@@ -50,7 +50,7 @@ public class Camera
             }
         }
 
-        return sum.multiply(1d/count);
+        return sum.multiply(1f/count);
     }
 
     public void setWidth(int width)
@@ -104,12 +104,12 @@ public class Camera
         return position;
     }
 
-    public void setZoom(double mag)
+    public void setZoom(float mag)
     {
         zoom = mag;
     }
 
-    public double getZoom()
+    public float getZoom()
     {
         return zoom;
     }
@@ -119,7 +119,7 @@ public class Camera
         laVector topRight = getTopRight();
         laVector topLeft = getTopLeft();
 
-        laVector dX = (topRight.subtract(topLeft)).multiply(1d/((double)this.width));
+        laVector dX = (topRight.subtract(topLeft)).multiply(1f/((float)this.width));
 
         return dX;
     }
@@ -129,7 +129,7 @@ public class Camera
         laVector topLeft = getTopLeft();
         laVector bottomLeft = getBottomLeft();
 
-        laVector dY = bottomLeft.subtract(topLeft).multiply(1d/((double)this.height));
+        laVector dY = bottomLeft.subtract(topLeft).multiply(1f/((float)this.height));
 
         return dY;
     }
@@ -138,7 +138,7 @@ public class Camera
     {
         laVector bl = lookat.multiply(zoom)
                 .subtract(right)
-                .subtract(head.multiply(((double) this.height) / ((double) this.width)));
+                .subtract(head.multiply(((float) this.height) / ((float) this.width)));
 
         return bl;
     }
@@ -147,7 +147,7 @@ public class Camera
     {
         laVector br = lookat.multiply(zoom)
                 .add(right)
-                .subtract(head.multiply(((double) this.height) / ((double)this.width)));
+                .subtract(head.multiply(((float) this.height) / ((float)this.width)));
 
         return br;
     }
@@ -156,7 +156,7 @@ public class Camera
     {
         laVector tl = lookat.multiply(zoom)
                 .subtract(right)
-                .add(head.multiply(((double) this.height) / ((double) this.width)));
+                .add(head.multiply(((float) this.height) / ((float) this.width)));
 
         return tl;
     }
@@ -165,7 +165,7 @@ public class Camera
     {
         laVector tr = lookat.multiply(zoom)
                 .add(right)
-                .add(head.multiply(((double)this.height)/((double)this.width)));
+                .add(head.multiply(((float)this.height)/((float)this.width)));
 
         return tr;
     }

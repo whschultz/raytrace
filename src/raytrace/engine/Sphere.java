@@ -5,24 +5,24 @@ package raytrace.engine;
  */
 public class Sphere extends RaytraceObject
 {
-    double radius = 1;
+    float radius = 1;
 
-    public void setRadius(double radius)
+    public void setRadius(float radius)
     {
         this.radius = radius;
     }
 
     @Override
-    public double intersect(laVector start, laVector direction) {
+    public float intersect(laVector start, laVector direction) {
         laVector v = start.subtract(center);
 
-        double output;
+        float output;
 
-        final double b = 2.0d * v.dot(direction);
-        final double a = direction.dot(direction);
-        final double c = v.dot(v) - radius * radius;
+        final float b = 2.0f * v.dot(direction);
+        final float a = direction.dot(direction);
+        final float c = v.dot(v) - radius * radius;
 
-        final double radical = b*b-4*a*c;
+        final float radical = b*b-4*a*c;
 
         if (radical <= 0)
         {
@@ -30,11 +30,11 @@ public class Sphere extends RaytraceObject
         }
         else
         {
-            final double root = Math.sqrt(radical);
+            final float root = (float)Math.sqrt(radical);
 
-            final double denominator = 2.0d * a;
-            final double t1 = (-b + root) / denominator;
-            final double t2 = (-b - root) / denominator;
+            final float denominator = 2.0f * a;
+            final float t1 = (-b + root) / denominator;
+            final float t2 = (-b - root) / denominator;
 
             if (t1 > 0d)
             {
@@ -64,7 +64,7 @@ public class Sphere extends RaytraceObject
     }
 
 //    @Override
-//    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light) {
+//    public Color intersectColor(laVector start, laVector direction, float t, laVector intersection, LightSource light) {
 //        assert t > 0;
 //
 //        Color output = light.diffuse(intersection, getNorm(intersection), direction, getDiffuse(), getPhong());
@@ -73,7 +73,7 @@ public class Sphere extends RaytraceObject
 //    }
 
     @Override
-    public laVector reflect(laVector start, laVector direction, double t, laVector intersection) {
+    public laVector reflect(laVector start, laVector direction, float t, laVector intersection) {
         final laVector pointNorm = this.getNorm(intersection);
         final laVector output = direction.reflect(pointNorm);
         return output;

@@ -77,48 +77,48 @@ public class Controller {
     private void setDefaultScene()
     {
         Color white = new Color(1,1,1);
-        Color grey = new Color(.5,.5,.5);
+        Color grey = new Color(.5f,.5f,.5f);
 
         scene.deleteAllObjects();
 
         camera.setPosition(new laVector(0,14,35));
         camera.setLookat(new laVector(0,-4,-10));
         camera.setTop(new laVector(0,1,0));
-        camera.setZoom(4d);
+        camera.setZoom(4f);
 
-        scene.setBackground(15d/255d, 10d/255d, 25.5d/255d);
-        scene.setAttenuation(1d/10d);
+        scene.setBackground(15f/255f, 10f/255f, 25.5f/255f);
+        scene.setAttenuation(1f/10f);
 
         Plane plane = new Plane();
         plane.setCenter(new laVector(0,-3,0));
         plane.setNormal(new laVector(0,1,0));
 
         plane.setAmbient(0);
-        plane.setDiffuse(.6);
-        plane.setSpecular(.4);
+        plane.setDiffuse(.6f);
+        plane.setSpecular(.4f);
         plane.setPhong(30);
-        plane.setColor(new CheckeredSurfaceColor(white, grey, new laVector(0,.5,0)));
+        plane.setColor(new CheckeredSurfaceColor(white, grey, new laVector(0,.5f,0)));
 
         scene.addObject(plane);
 
 
-        double x = 0.0f, y = 0.0f;
+        float x = 0.0f, y = 0.0f;
 
-        final double dx = 6.0f;
-        final double dy = Math.sqrt(3d) * 3.0f;
-        final double dz = dy;
+        final float dx = 6.0f;
+        final float dy = (float)Math.sqrt(3f) * 3.0f;
+        final float dz = dy;
 
         float x0 = 0.0f;
 
-        final double dim = 5;
+        final float dim = 5;
 
 
         Sphere sparesphere = new Sphere();
         sparesphere.setCenter( new laVector(-3, 0, 0 ));
         sparesphere.setRadius(3);
-        sparesphere.setAmbient(.0);
-        sparesphere.setDiffuse( .6 );
-        sparesphere.setSpecular( .4 );
+        sparesphere.setAmbient(.0f);
+        sparesphere.setDiffuse( .6f );
+        sparesphere.setSpecular( .4f );
         sparesphere.setPhong(30);
         sparesphere.setColor(white);
         scene.addObject(sparesphere);
@@ -126,9 +126,9 @@ public class Controller {
         sparesphere = new Sphere();
         sparesphere.setCenter( new laVector(3, 0, 0 ));
         sparesphere.setRadius(3);
-        sparesphere.setAmbient(.0);
-        sparesphere.setDiffuse( .6 );
-        sparesphere.setSpecular( .4 );
+        sparesphere.setAmbient(.0f);
+        sparesphere.setDiffuse( .6f );
+        sparesphere.setSpecular( .4f );
         sparesphere.setPhong(30);
         sparesphere.setColor(white);
         scene.addObject(sparesphere);
@@ -137,25 +137,25 @@ public class Controller {
             LightSource sparelight = new LightSource();
             sparelight.setColor(new Color(255, 0, 0));
             sparelight.setPosition(new laVector( -32, 16, 32 ));
-            sparelight.setRadius( .3 );
+            sparelight.setRadius( .3f );
             scene.addLight(sparelight);
 
             sparelight = new LightSource();
             sparelight.setColor(new Color(0, 0, 255));
             sparelight.setPosition(new laVector( 32, 16, 32 ));
-            sparelight.setRadius( .3 );
+            sparelight.setRadius( .3f );
             scene.addLight(sparelight);
 
             sparelight = new LightSource();
             sparelight.setColor(new Color(0, 255, 0));
             sparelight.setPosition(new laVector( -32, 16, -32 ));
-            sparelight.setRadius( .3 );
+            sparelight.setRadius( .3f);
             scene.addLight(sparelight);
 
             sparelight = new LightSource();
             sparelight.setColor(new Color(128, 128, 0));
             sparelight.setPosition(new laVector( 32, 16,-32 ));
-            sparelight.setRadius( .3 );
+            sparelight.setRadius( .3f );
             scene.addLight(sparelight);
         }
     }
@@ -204,7 +204,7 @@ public class Controller {
 
             camera.setLookat(new laVector(0, 0, -1));
             camera.setTop(new laVector(0, 1, 0));
-            camera.setPosition(new laVector(0, 0, 3.5));
+            camera.setPosition(new laVector(0, 0, 3.5f));
             camera.setZoom(2);
         }
     }
@@ -261,27 +261,27 @@ public class Controller {
         final int originalAntialiasResolution = camera.getAntialiasResolution();
         final boolean enableAntialiasing = originalAntialiasResolution > 1;
 
-        final double dpp = getDpp();
+        final float dpp = getDpp();
         final laVector dX;
         final laVector dY;
 
 
         try {
             camera.setAntialiasResolution(originalAntialiasResolution / (int)dpp);
-            dX = camera.getDx().multiply(1d / dpp);
-            dY = camera.getDy().multiply(1d / dpp);
+            dX = camera.getDx().multiply(1f / dpp);
+            dY = camera.getDy().multiply(1f / dpp);
 
-            final double total = camera.getWidth() * camera.getHeight() * dpp * dpp;
+            final float total = camera.getWidth() * camera.getHeight() * dpp * dpp;
 
-            for (double x = 0; x < camera.getWidth() * dpp; x++) {
+            for (float x = 0; x < camera.getWidth() * dpp; x++) {
                 laVector currentTop = topLeft.add(dX.multiply(x));
 
-                final double finalX = x;
+                final float finalX = x;
                 threadPool.execute(() -> {
 
                     final List<Color> column = new ArrayList<Color>((int)(camera.getHeight() * dpp));
 
-                    for (double y = 0; y < camera.getHeight() * dpp; y++) {
+                    for (float y = 0; y < camera.getHeight() * dpp; y++) {
                         laVector currentXY = currentTop.add(dY.multiply(y));
                         laVector currentDir = currentXY.unit();
 
@@ -299,7 +299,7 @@ public class Controller {
                     }
 
                     Platform.runLater(() -> {
-                        double y = 0;
+                        float y = 0;
                         context.setLineWidth(1 / dpp);
                         for(Color color : column)
                         {
@@ -309,7 +309,7 @@ public class Controller {
                             y++;
                         }
 
-                        prgRenderProgress.setProgress((double) count.get() / total);
+                        prgRenderProgress.setProgress((float) count.get() / total);
 
                         if (count.get() >= total)
                         {

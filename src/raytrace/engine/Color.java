@@ -5,20 +5,20 @@ package raytrace.engine;
  */
 public class Color
 {
-    private final double red;
+    private final float red;
 
-    private final double green;
+    private final float green;
 
-    private final double blue;
+    private final float blue;
 
-    public Color(double r, double g, double b)
+    public Color(float r, float g, float b)
     {
         red = r;
         green = g;
         blue = b;
     }
 
-    public Color multiply(double product)
+    public Color multiply(float product)
     {
         return new Color(red * product, green * product, blue * product);
     }
@@ -33,17 +33,17 @@ public class Color
         return new Color(red + val.red, green + val.green, blue + val.blue);
     }
 
-    public double getRed()
+    public float getRed()
     {
         return Math.max(Math.min(red,1), 0);
     }
 
-    public double getGreen()
+    public float getGreen()
     {
         return Math.max(Math.min(green, 1), 0);
     }
 
-    public double getBlue()
+    public float getBlue()
     {
         return Math.max(Math.min(blue, 1), 0);
     }
