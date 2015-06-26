@@ -73,17 +73,25 @@ public class Sphere extends RaytraceObject
 //    }
 
     @Override
-    public laVector reflect(laVector start, laVector direction, double t, laVector intersection) {
-        final laVector pointNorm = this.getNorm(intersection);
-        final laVector output = direction.reflect(pointNorm);
-        return output;
-    }
-
-    @Override
     public laVector getNorm(laVector atPoint) {
         final laVector norm = atPoint.subtract(center);
         final laVector output = norm.unit();
 
         return output;
+    }
+
+    @Override
+    public boolean intersects(Cone lightCone)
+    {
+        laVector dirToSphere = this.center.subtract(lightCone.center);
+        double distance = dirToSphere.norm();
+        dirToSphere = dirToSphere.multiply(1d/distance);
+
+        final double theta = Math.asin(this.radius * Math.sin(90d)/distance);
+
+        double angle = Math.abs(Math.acos(dirToSphere.dot(lightCone.dir)));
+
+
+        return angle < theta + lightCone.theta;
     }
 }

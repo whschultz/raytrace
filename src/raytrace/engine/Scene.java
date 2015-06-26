@@ -12,8 +12,8 @@ public class Scene
 {
     public int maxSpecDepth = 10;
     public final boolean softShadows = true;
-    public int softShadowLevel = 4;
-    public int softShadowSteps = 4;
+    public int softShadowLevel = 10;
+    public int softShadowSteps = 10;
 
     Color background;
     Collection<RaytraceObject> objects = new ArrayList<RaytraceObject>();
@@ -140,58 +140,82 @@ public class Scene
             boolean done = false;
             double previous_success = -1d;
 
-            for(double layer = this.softShadowLevel; layer > 0; layer--)
+            Cone lightCone;
+
             {
-                if (total > .5d && success < .5d)
+                laVector dirToLight = point.subtract(intersection);
+                final double distanceToLight = dirToLight.norm();
+                dirToLight = dirToLight.multiply(1d / distanceToLight);
+
+                final double lightRadius = light.getRadius();
+                final double theta = Math.asin(lightRadius * Math.sin(90d) / t);
+
+                lightCone = new Cone(intersection, dirToLight, theta);
+            }
+
+            Collection<RaytraceObject> blockingObjects = this.getIntersectingObjects(lightCone, intersected);
+
+            if (blockingObjects.size() > 0)
+            {
+                for (double layer = this.softShadowLevel; layer > 0; layer--)
                 {
-                    // Then we've been around the outer shell and nothing created
-                    // a shadow.  The inner shell definitely won't either.
-                    break;
-                }
-
-                double currentRadius = (layer/((double)softShadowLevel))*light.getRadius();
-
-                double dTheta = 2.000001d*Math.PI/((double)(softShadowSteps*layer + 1));
-                double dPhi = Math.PI/(softShadowSteps*layer + 2);
-
-                for(double theta = 0; theta < 2*Math.PI; theta += dTheta)
-                {
-                    for(double phi = dPhi; phi < Math.PI; phi += dPhi)
+                    if (total > .5d && success < .5d)
                     {
-                        if (!done)
+                        // Then we've been around the outer shell and nothing created
+                        // a shadow.  The inner shell definitely won't either.
+                        break;
+                    }
+
+                    double currentRadius = (layer / ((double) softShadowLevel)) * light.getRadius();
+
+                    double dTheta = 2.000001d * Math.PI / ((double) (softShadowSteps * layer + 1));
+                    double dPhi = Math.PI / (softShadowSteps * layer + 2);
+
+                    for (double theta = 0; theta < 2 * Math.PI; theta += dTheta)
+                    {
+                        for (double phi = dPhi; phi < Math.PI; phi += dPhi)
                         {
-                            laVector dir = laVector.fromSpherical(currentRadius, theta, phi);
-
-                            laVector lightPos = point.add(dir);
-                            laVector newDirection = lightPos.subtract(intersection);
-                            double distance = newDirection.norm();
-                            newDirection = newDirection.unit();
-
-                            // dot product is related to the cosine of the angle between the two.
-                            // If the dot product is positive, the angle is acute.  Otherwise, it's
-                            // right or obtuse.  In which case, the light is irrelevant.
-                            if ( intersected.getNorm(intersection).dot(newDirection) > 0 )
+                            if (!done)
                             {
-                                IntersectResults results = this.intersect(intersection, newDirection, intersected);
+                                laVector dir = laVector.fromSpherical(currentRadius, theta, phi);
 
-                                final double shadowPoint = results.t;
-                                if ((shadowPoint < 0) || (shadowPoint > distance))
+                                laVector lightPos = point.add(dir);
+                                laVector newDirection = lightPos.subtract(intersection);
+                                double distance = newDirection.norm();
+                                newDirection = newDirection.unit();
+
+                                // dot product is related to the cosine of the angle between the two.
+                                // If the dot product is positive, the angle is acute.  Otherwise, it's
+                                // right or obtuse.  In which case, the light is irrelevant.
+                                if (intersected.getNorm(intersection).dot(newDirection) > 0)
                                 {
-                                    success++;
+                                    IntersectResults results = this
+                                            .intersect(intersection, newDirection, intersected, blockingObjects);
+
+                                    final double shadowPoint = results.t;
+                                    if ((shadowPoint < 0) || (shadowPoint > distance))
+                                    {
+                                        success++;
+                                    }
                                 }
                             }
+
+                            total++;
                         }
-
-                        total++;
                     }
-                }
 
-                if (success <= previous_success +.5d)
-                {
-                    done = true;
-                }
+                    if (success <= previous_success + .5d)
+                    {
+                        done = true;
+                    }
 
-                previous_success = success;
+                    previous_success = success;
+                }
+            }
+            else
+            {
+                success = 1d;
+                total = 1d;
             }
         }
         else
@@ -216,12 +240,35 @@ public class Scene
         return intersectColor.multiply(success/total);
     }
 
+
+    private Collection<RaytraceObject> getIntersectingObjects(Cone lightCone, RaytraceObject ignore)
+    {
+        Collection<RaytraceObject> output = new ArrayList<>();
+
+        for(RaytraceObject object : objects)
+        {
+            if (object == ignore)
+                continue;
+
+            if (object.intersects(lightCone))
+            {
+                output.add(object);
+            }
+        }
+
+        return output;
+    }
+
     public IntersectResults intersect(laVector start, laVector direction, RaytraceObject ignore)
+    {
+        return intersect(start,direction,ignore,objects);
+    }
+
+    private IntersectResults intersect(laVector start, laVector direction, RaytraceObject ignore, Collection<RaytraceObject> collection)
     {
         IntersectResults results = new IntersectResults();
 
-
-        for(RaytraceObject object : objects)
+        for(RaytraceObject object : collection)
         {
             if (object == ignore)
                 continue;

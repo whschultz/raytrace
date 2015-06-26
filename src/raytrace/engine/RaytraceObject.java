@@ -18,6 +18,11 @@ public abstract class RaytraceObject
     {
     }
 
+    protected RaytraceObject(laVector center)
+    {
+        this.center = center;
+    }
+
     public abstract double intersect(laVector start, laVector direction);
     public laVector intersect(laVector start, laVector direction, double t)
     {
@@ -34,7 +39,13 @@ public abstract class RaytraceObject
 
     }
 
-    public abstract laVector reflect(laVector start, laVector direction, double t, laVector intersection);
+    public laVector reflect(laVector start, laVector direction, double t, laVector intersection)
+    {
+        final laVector pointNorm = this.getNorm(intersection);
+        final laVector output = direction.reflect(pointNorm);
+        return output;
+    }
+
     public abstract laVector getNorm(laVector atPoint);
 
     public void setCenter(laVector center)
@@ -119,4 +130,6 @@ public abstract class RaytraceObject
     {
         return ambient;
     }
+
+    public abstract boolean intersects(Cone lightCone);
 }

@@ -49,7 +49,16 @@ public class Plane extends RaytraceObject
 
 
     @Override
-    public laVector getNorm(laVector atPoint) {
+    public laVector getNorm(laVector atPoint)
+    {
         return normal;
+    }
+
+    @Override
+    public boolean intersects(Cone lightCone)
+    {
+        double angle = Math.abs(Math.acos(normal.dot(lightCone.dir)));
+
+        return Math.min(angle, 180d - angle) < lightCone.theta ;
     }
 }

@@ -137,25 +137,25 @@ public class Controller {
             LightSource sparelight = new LightSource();
             sparelight.setColor(new Color(255, 0, 0));
             sparelight.setPosition(new laVector( -32, 16, 32 ));
-            sparelight.setRadius( .3 );
+            sparelight.setRadius( 1 );
             scene.addLight(sparelight);
 
             sparelight = new LightSource();
             sparelight.setColor(new Color(0, 0, 255));
             sparelight.setPosition(new laVector( 32, 16, 32 ));
-            sparelight.setRadius( .3 );
+            sparelight.setRadius( 1 );
             scene.addLight(sparelight);
 
             sparelight = new LightSource();
             sparelight.setColor(new Color(0, 255, 0));
             sparelight.setPosition(new laVector( -32, 16, -32 ));
-            sparelight.setRadius( .3 );
+            sparelight.setRadius( 1 );
             scene.addLight(sparelight);
 
             sparelight = new LightSource();
             sparelight.setColor(new Color(128, 128, 0));
             sparelight.setPosition(new laVector( 32, 16,-32 ));
-            sparelight.setRadius( .3 );
+            sparelight.setRadius( 1 );
             scene.addLight(sparelight);
         }
     }
