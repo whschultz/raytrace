@@ -6,7 +6,7 @@ package raytrace.engine;
 public abstract class RaytraceObject
 {
     protected laVector center;
-    protected Color color;
+    private SurfaceColor surfaceColor;
     protected Color background;
 
     protected double ambient;
@@ -24,7 +24,16 @@ public abstract class RaytraceObject
         return start.add(direction.multiply(t));
     }
 
-    public abstract Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light);
+    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light)
+    {
+        assert t > 0;
+
+        Color output = light.diffuse(intersection, getNorm(intersection), direction, getDiffuse(), getPhong());
+
+        return output;
+
+    }
+
     public abstract laVector reflect(laVector start, laVector direction, double t, laVector intersection);
     public abstract laVector getNorm(laVector atPoint);
 
@@ -35,7 +44,12 @@ public abstract class RaytraceObject
 
     public void setColor(Color color)
     {
-        this.color = color;
+        surfaceColor = new ConstantSurfaceColor(color);
+    }
+
+    public void setColor(SurfaceColor color)
+    {
+        this.surfaceColor = color;
     }
 
     public void setBackground(Color color)
@@ -83,7 +97,7 @@ public abstract class RaytraceObject
 
     public Color getColor(laVector atPoint)
     {
-        return color;
+        return surfaceColor.getColor(atPoint);
     }
 
     public double getPhong()

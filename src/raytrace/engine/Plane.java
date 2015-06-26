@@ -30,17 +30,17 @@ public class Plane extends RaytraceObject
         return intersect;
     }
 
-    @Override
-    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light) {
-        if ( t <= 0)
-        {
-            return background;
-        }
-
-        Color output = light.diffuse(intersection, normal, direction, diffuse, phong);
-
-        return output;
-    }
+//    @Override
+//    public Color intersectColor(laVector start, laVector direction, double t, laVector intersection, LightSource light) {
+//        if ( t <= 0)
+//        {
+//            return background;
+//        }
+//
+//        Color output = light.diffuse(intersection, normal, direction, diffuse, phong);
+//
+//        return output;
+//    }
 
     @Override
     public laVector reflect(laVector start, laVector direction, double t, laVector intersection) {

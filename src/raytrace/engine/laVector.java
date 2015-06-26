@@ -31,6 +31,17 @@ public class laVector
         z_coor = z;
     }
 
+    public static laVector fromSpherical(double r, double theta, double phi)
+    {
+        final double sinPhi = Math.sin(phi);
+
+        double x = r*sinPhi*Math.cos(theta);
+        double y = r*sinPhi*Math.sin(theta);
+        double z = r*Math.cos(phi);
+
+        return new laVector(x,y,z);
+    }
+
     @Override
     public boolean equals(Object obj)
     {

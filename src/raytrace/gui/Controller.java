@@ -65,20 +65,23 @@ public class Controller {
 
         txtWidth.setText("2560");
         txtHeight.setText("1440");
-        txtAntialiasing.setText("10");
+        txtAntialiasing.setText("4");
 
         camera.setWidth((int) cnvsRender.getWidth());
         camera.setHeight((int) cnvsRender.getHeight());
-        camera.setAntialiasResolution(10);
+        camera.setAntialiasResolution(4);
 
         setDefaultScene();
     }
 
     private void setDefaultScene()
     {
+        Color white = new Color(1,1,1);
+        Color grey = new Color(.5,.5,.5);
+
         scene.deleteAllObjects();
 
-        camera.setPosition(new laVector(0,40,100));
+        camera.setPosition(new laVector(0,14,35));
         camera.setLookat(new laVector(0,-4,-10));
         camera.setTop(new laVector(0,1,0));
         camera.setZoom(4d);
@@ -94,7 +97,7 @@ public class Controller {
         plane.setDiffuse(.6);
         plane.setSpecular(.4);
         plane.setPhong(30);
-        plane.setColor(new Color(1,1,1));
+        plane.setColor(new CheckeredSurfaceColor(white, grey, new laVector(0,.5,0)));
 
         scene.addObject(plane);
 
@@ -109,57 +112,26 @@ public class Controller {
 
         final double dim = 5;
 
-        Color white = new Color(1,1,1);
 
-        for( double k = 0; k < dim; k++ )
-        {
-            y = k * 3.0d;
-            x0 = 0.0f;
+        Sphere sparesphere = new Sphere();
+        sparesphere.setCenter( new laVector(-3, 0, 0 ));
+        sparesphere.setRadius(3);
+        sparesphere.setAmbient(.0);
+        sparesphere.setDiffuse( .6 );
+        sparesphere.setSpecular( .4 );
+        sparesphere.setPhong(30);
+        sparesphere.setColor(white);
+        scene.addObject(sparesphere);
 
-            for( double i = 0; i < dim - k; i++ )
-            {
-                x = x0;
-
-                for( double j = 0; j <= i; j++ )
-                {
-                    if ( k > 0 )
-                    {
-                        LightSource sparelight = new LightSource();
-                        sparelight.setColor(white);
-                        sparelight.setPosition(new laVector(x, k * dz - 4, y));
-                        sparelight.setRadius(.1);
-                        scene.addLight(sparelight);
-                    }
-
-                    Sphere sparesphere = new Sphere();
-                    sparesphere.setCenter( new laVector(x, k*dz, y ));
-                    sparesphere.setRadius(3);
-                    sparesphere.setAmbient(.0);
-                    sparesphere.setDiffuse( 1.0f - k/dim );
-                    sparesphere.setSpecular( k/dim );
-                    sparesphere.setPhong(30);
-
-                    if ( k < dim )
-                    {
-                        sparesphere.setColor(new Color(
-                                Math.cos( i*Math.PI/( 2.0f*(dim-k) ) ),
-                                Math.cos( (i-j-dim)*Math.PI/(2.0f*(dim-k)) ),
-                                Math.sin( (j)*Math.PI/(2.0f*(dim-k)) ) ));
-                    }
-                    else
-                    {
-                        sparesphere.setColor(white);
-                    }
-
-                    scene.addObject(sparesphere);
-
-                    x += dx;
-                }
-
-                x0 -= dy/2;
-                y += dy;
-            }
-        }
+        sparesphere = new Sphere();
+        sparesphere.setCenter( new laVector(3, 0, 0 ));
+        sparesphere.setRadius(3);
+        sparesphere.setAmbient(.0);
+        sparesphere.setDiffuse( .6 );
+        sparesphere.setSpecular( .4 );
+        sparesphere.setPhong(30);
+        sparesphere.setColor(white);
+        scene.addObject(sparesphere);
 
         {
             LightSource sparelight = new LightSource();
@@ -278,7 +250,7 @@ public class Controller {
     {
         Executors.newCachedThreadPool();
 
-        ExecutorService threadPool = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors() * 2);
+        ExecutorService threadPool = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
 
         laVector topLeft = camera.getTopLeft();
         laVector position = camera.getPosition();
